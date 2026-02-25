@@ -16,7 +16,7 @@ WORKDIR /tool/source
 
 # Clone the repository
 RUN git config --global http.sslVerify false && \
-    git clone --depth 1 https://github.com/alistairrice01/pypgatk_ar .
+    git clone --depth 1 https://github.com/AlistairRice01/pypgatk_ar .
 
 # Install dependencies and the package itself
 RUN pip install --no-cache-dir -r requirements.txt && \
