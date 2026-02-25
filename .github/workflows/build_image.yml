@@ -28,5 +28,5 @@ jobs:
           context: .
           push: true
           # This creates a tag like: ghcr.io/your-username/your-repo-name:latest
-          tags: ghcr.io/${{ github.repository }}:latest
+          tags: ghcr.io/alistairrice01/pypgatk_ar:latest
           no-cache: true  # Add this to bypass stuck layers
