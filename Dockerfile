@@ -1,30 +1,28 @@
-FROM debian:bookworm
+FROM python:3.11-slim-bookworm
 LABEL maintainer="Yasset Perez-Riverol <ypriverol@gmail.com>" \
       software="pypgatk" \
-      software.version="0.0.26" \
-      version="1"
+      version="0.0.26"
 
-# Combine updates and installs to minimize layers
+# Install only the necessary system tools
+# 'build-essential' and 'python3-dev' are often needed for bioinformatics C-extensions
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    python3 \
-    python3-pip \
-    python3-setuptools \
     git \
     procps \
+    build-essential \
+    python3-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Set up working directories
 WORKDIR /tool/source
 
-# Clone and install
-# Note: Added --break-system-packages for Debian Bookworm compatibility with global pip
+# Clone the repository
 RUN git config --global http.sslVerify false && \
-    git clone --depth 1 https://github.com/ggrimes/pypgatk_ar . && \
-    pip3 install --no-cache-dir --break-system-packages -r requirements.txt && \
-    pip3 install --no-cache-dir --break-system-packages -e . && \
-    rm -rf .git
+    git clone --depth 1 https://github.com/ggrimes/pypgatk_ar .
 
-# Environment setup
+# Install dependencies and the package itself
+RUN pip install --no-cache-dir -r requirements.txt && \
+    pip install --no-cache-dir -e .
+
+# Set environment variables
 ENV LC_ALL=C.UTF-8 \
     LANG=C.UTF-8 \
     PATH=$PATH:/tool/source/pypgatk/
