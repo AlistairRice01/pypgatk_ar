@@ -1,23 +1,32 @@
-FROM biocontainers/biocontainers:debian-stretch-backports
-MAINTAINER Yasset Perez-Riverol <ypriverol@gmail.com>
-LABEL software="pypgatk" \
-    container="pypgatk" \
-    software.version="0.0.26" \
-    version="1"
+FROM python:3.11-slim-bookworm
+LABEL maintainer="Yasset Perez-Riverol <ypriverol@gmail.com>" \
+      software="pypgatk" \
+      version="0.0.26"
 
-RUN apt-get update && apt-get install -y python3 && apt-get install -y python3-pip && apt-get install -y git
-RUN apt-get clean && apt-get purge && rm -rf /var/lib/apt/lists/* /tmp/*
-RUN apt-get update && apt-get install -y procps
+# Install only the necessary system tools
+# 'build-essential' and 'python3-dev' are often needed for bioinformatics C-extensions
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    git \
+    procps \
+    build-essential \
+    python3-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /tool/source
+
+# Clone the repository
+RUN git config --global http.sslVerify false && \
+    git clone --depth 1 https://github.com/ggrimes/pypgatk_ar .
+
+# Install dependencies and the package itself
+RUN pip install --no-cache-dir -r requirements.txt && \
+    pip install --no-cache-dir -e .
+
+# Set environment variables
+ENV LC_ALL=C.UTF-8 \
+    LANG=C.UTF-8 \
+    PATH=$PATH:/tool/source/pypgatk/
+
+RUN chmod +x /tool/source/pypgatk/pypgatkc.py
 
 WORKDIR /data
-RUN mkdir -p /tool/source
-
-RUN git config --global http.sslVerify false
-RUN git clone --depth 1 https://github.com/alistairrice01/pypgatk_ar /tool/source
-WORKDIR /tool/source
-RUN pip3 install --no-cache-dir -r requirements.txt && pip3 install --no-cache-dir -e .
-
-ENV LC_ALL=C.UTF-8
-ENV LANG=C.UTF-8
-ENV PATH=$PATH:/tool/source/pypgatk/
-RUN chmod +x /tool/source/pypgatk/pypgatkc.py
