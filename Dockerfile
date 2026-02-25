@@ -13,7 +13,7 @@ WORKDIR /data
 RUN mkdir -p /tool/source
 
 RUN git config --global http.sslVerify false
-RUN git clone --depth 1 https://github.com/bigbio/py-pgatk.git /tool/source
+RUN git clone --depth 1 https://github.com/AlistairRice01/pypgatk_ar /tool/source
 WORKDIR /tool/source
 RUN pip3 install --no-cache-dir -r requirements.txt && pip3 install --no-cache-dir -e .
 
