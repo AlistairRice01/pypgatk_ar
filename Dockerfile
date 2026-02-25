@@ -1,4 +1,4 @@
-FROM biocontainers/biocontainers:debian-stretch-backports
+FROM debian:bookworm
 MAINTAINER Yasset Perez-Riverol <ypriverol@gmail.com>
 LABEL software="pypgatk" \
     container="pypgatk" \
