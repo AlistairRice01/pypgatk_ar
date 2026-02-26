@@ -1,4 +1,5 @@
-FROM python:3.11-slim-bookworm
+FROM python:3.11-bookworm
+# Most of the libraries you need are already here!
 LABEL maintainer="Yasset Perez-Riverol <ypriverol@gmail.com>" \
       software="pypgatk" \
       version="0.0.26"
